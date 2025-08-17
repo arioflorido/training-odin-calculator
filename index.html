@@ -1,40 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Odin Calculator</title>
-</head>
+    <link rel="stylesheet" href="style.css" />
+    <script src="./index.js" defer></script>
+  </head>
 
-<body>
-    <div class = "container">
-        <div class = "display">80008132</div>
-        <div class = "keypad">
-            <div class = "left-keypad">
-                <button>CE</button>
-                <button>&lpar;</button>
-                <button>&rpar;</button>
-                <button>7</button>
-                <button>8</button>
-                <button>9</button>
-                <button>4</button>
-                <button>5</button>
-                <button>6</button>
-                <button>1</button>
-                <button>2</button>
-                <button>3</button>
-                <button>0</button>
-                <button>.</button>
-            </div>
-            <div class = "right-keypad">
-                <button>/</button>
-                <button>x</button>
-                <button>-</button>
-                <button>+</button>
-                <button>=</button>
-            </div>
+  <body>
+    <div class="container">
+      <div class="display">80008132</div>
+      <div class="keypad">
+        <div class="left-keypad">
+          <button class="clearButton">CE</button>
+          <!--
+                    <button >&lpar;</button>
+                    <button>&rpar;</button>
+                 -->
+          <button class="numeric">7</button>
+          <button class="numeric">8</button>
+          <button class="numeric">9</button>
+          <button class="numeric">4</button>
+          <button class="numeric">5</button>
+          <button class="numeric">6</button>
+          <button class="numeric">1</button>
+          <button class="numeric">2</button>
+          <button class="numeric">3</button>
+          <button class="numeric">0</button>
+          <button class="decimal">.</button>
         </div>
-
+        <div class="right-keypad">
+          <button class="operand">/</button>
+          <button class="operand">x</button>
+          <button class="operand">-</button>
+          <button class="operand">+</button>
+          <button class="operate">=</button>
+        </div>
+      </div>
     </div>
-</body>
+  </body>
 </html>
