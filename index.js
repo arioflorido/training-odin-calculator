@@ -15,7 +15,6 @@ function divide(num1, num2) {
 }
 
 function operate(num1, num2, operand) {
-  console.log(`About to perform ${operand} operation on ${num1} and ${num2}`);
   switch (operand) {
     case "+":
       return add(num1, num2);
@@ -29,6 +28,10 @@ function operate(num1, num2, operand) {
       console.error(`Unknown '${operand}' operation`);
       return undefined;
   }
+}
+
+function stringHasDecimal(str) {
+  return str.indexOf(".") != -1;
 }
 
 function clear() {
@@ -47,7 +50,9 @@ const clearButton = document.querySelector("button.clearButton");
 clearButton.addEventListener("click", clear);
 
 function updateDisplayContents(arg) {
+  const num = Number(arg);
   display.textContent = String(arg);
+  console.log(`New display contents: ${arg}`);
 }
 
 function getDisplayContents() {
@@ -55,7 +60,6 @@ function getDisplayContents() {
 }
 
 function clearDisplayContents() {
-  console.log("HEHEHE");
   display.textContent = "";
 }
 
@@ -63,14 +67,18 @@ const numericButtons = document.querySelectorAll("button.numeric");
 numericButtons.forEach((numericButton) =>
   numericButton.addEventListener("click", () => {
     const displayContent = getDisplayContents();
-    updateDisplayContents(displayContent + numericButton.textContent);
+    if (!stringHasDecimal(displayContent)) {
+      updateDisplayContents(Number(displayContent + numericButton.textContent));
+    } else {
+      updateDisplayContents(displayContent + numericButton.textContent);
+    }
   })
 );
 
 const decimalButton = document.querySelector("button.decimal");
 decimalButton.addEventListener("click", () => {
-  if (display.textContent.indexOf(".") == -1) {
-    const displayContent = getDisplayContents();
+  const displayContent = getDisplayContents() || "0";
+  if (!stringHasDecimal(displayContent)) {
     updateDisplayContents(displayContent + decimalButton.textContent);
   }
 });
@@ -78,11 +86,11 @@ decimalButton.addEventListener("click", () => {
 const operandButtons = document.querySelectorAll("button.operand");
 operandButtons.forEach((operandButton) =>
   operandButton.addEventListener("click", () => {
+    operand = operandButton.textContent;
+    console.log(`Pressed operand '${operand}'`);
     const displayContents = Number(getDisplayContents());
     if (!Boolean(displayContents)) return;
 
-    operand = operandButton.textContent;
-    console.log(`Operand : ${operand}`);
     console.log(`toggleInputToNum2: ${toggleInputToNum2}`);
 
     // input for num1
@@ -102,57 +110,31 @@ operandButtons.forEach((operandButton) =>
       if (Boolean(operand)) {
         const result = operate(num1, num2, operand);
         updateDisplayContents(result);
-        console.log(result);
-        num1 = result;
-        console.log(`num1 captured : ${num1}`);
+        // num1 = result;
+        // console.log(`num1 captured : ${num1}`);
+        // num2 = undefined;
+        num1 = undefined;
         num2 = undefined;
-      } else {
         toggleInputToNum2 = false;
       }
-
-      // const result = operate(num1, num2, operand);
-      // updateDisplayContents(result);
-      // num1 = result;
-      // console.log(`assigning result ${result} to num1`);
-      // clearDisplayContents();
-      // num2 = undefined;
-      // operand = undefined;
+      //  else {
+      //   toggleInputToNum2 = false;
+      // }
+      operand = operandButton.textContent;
     }
-
-    // if (!Boolean(num1)) {
-    //   toggleInputToNum2 = true;
-    //   num1 = displayContents;
-    //   clearDisplayContents();
-    //   console.log(num1);
-    //   operand = operandButton.textContent;
-    //   return;
-    // }
-
-    // if (toggleInputToNum2) {
-    //   num2 = displayContents;
-    //   console.log(num2);
-
-    //   console.log(num1, num2, operand);
-    //   const result = operate(num1, num2, operand);
-    //   updateDisplayContents(result);
-    //   console.log(result);
-    //   num1 = result;
-
-    //   operand = operandButton.textContent;
-    //   return;
-    // }
   })
 );
 
 const operateButton = document.querySelector("button.operate");
 operateButton.addEventListener("click", () => {
   num2 = Number(getDisplayContents());
+  toggleInputToNum2 = false;
   if (Boolean(num1) && Boolean(num2) && Boolean(operand)) {
     const result = operate(num1, num2, operand);
     updateDisplayContents(result);
-    console.log(result);
-    num1 = result;
-    console.log(`num1 captured : ${num1}`);
+    // num1 = result;
+    // console.log(`num1 captured : ${num1}`);
+    num1 = undefined;
     num2 = undefined;
   }
 });
