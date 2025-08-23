@@ -131,6 +131,16 @@ operateButton.addEventListener("click", () => {
   }
 });
 
+const backspaceButton = document.querySelector("button.backspace");
+backspaceButton.addEventListener("click", () => {
+  const displayContents = getDisplayContents();
+
+  if (!Boolean(displayContents)) return;
+
+  updateDisplayContents(
+    displayContents.substring(0, displayContents.length - 1)
+  );
+});
 // TODO
 // 1) if display.textContent is from operation
 // when user presses any numeric buttons, the display is cleared
@@ -145,5 +155,4 @@ operateButton.addEventListener("click", () => {
 // 4) convert all of this into a Calculator Class
 // 5) Display a snarky error message if the user tries to divide by 0… and don’t let it crash your calculator
 // 6) When a result is displayed, pressing a new digit should clear the result and start a new calculation instead of appending the digit to the existing result. Check whether this is the case on your calculator!
-// 7) Add a "backspace" button, so the user can undo their last input if they click the wrong number.
-// 8) Add keyboard support!
+// 7) Add keyboard support!
