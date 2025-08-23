@@ -38,7 +38,7 @@ function clear() {
   num1 = undefined;
   num2 = undefined;
   operand = undefined;
-  display.textContent = undefined;
+  clearDisplayContents();
 }
 
 let num1;
@@ -50,9 +50,8 @@ const clearButton = document.querySelector("button.clearButton");
 clearButton.addEventListener("click", clear);
 
 function updateDisplayContents(arg) {
-  const num = Number(arg);
   display.textContent = String(arg);
-  console.log(`New display contents: ${arg}`);
+  console.log(`New display: ${display.textContent}`);
 }
 
 function getDisplayContents() {
@@ -86,41 +85,36 @@ decimalButton.addEventListener("click", () => {
 const operandButtons = document.querySelectorAll("button.operand");
 operandButtons.forEach((operandButton) =>
   operandButton.addEventListener("click", () => {
-    operand = operandButton.textContent;
-    console.log(`Pressed operand '${operand}'`);
     const displayContents = Number(getDisplayContents());
-    if (!Boolean(displayContents)) return;
+    console.log(`Pressed operand '${operandButton.textContent}'`);
 
-    console.log(`toggleInputToNum2: ${toggleInputToNum2}`);
-
-    // input for num1
-    if (!toggleInputToNum2) {
-      num1 = displayContents;
-      toggleInputToNum2 = true;
-
-      console.log(`num1 captured : ${num1}`);
-      clearDisplayContents(); //move somewhere
-      return;
-    }
-
-    // input for num2
-    if (toggleInputToNum2) {
-      num2 = displayContents;
-      console.log(`num2 captured : ${num2}`);
-      if (Boolean(operand)) {
+    // if operand was pressed while an operand already exists...
+    if (Boolean(operand)) {
+      // if num1 and num2 exists, perform operation based on the existing operand
+      // then assign new operand
+      if (Boolean(displayContents)) {
+        num2 = displayContents;
+      }
+      if (Boolean(num1) && Boolean(num2)) {
         const result = operate(num1, num2, operand);
         updateDisplayContents(result);
-        // num1 = result;
-        // console.log(`num1 captured : ${num1}`);
-        // num2 = undefined;
-        num1 = undefined;
+        num1 = result;
         num2 = undefined;
-        toggleInputToNum2 = false;
+        operand = operandButton.textContent;
+        clearDisplayContents();
+        return;
       }
-      //  else {
-      //   toggleInputToNum2 = false;
-      // }
-      operand = operandButton.textContent;
+    } else {
+      if (!Boolean(num1)) {
+        num1 = displayContents;
+        clearDisplayContents();
+
+        // Only record operand when num1 is defined
+        operand = operandButton.textContent;
+        console.log(`Operand: ${operand}`);
+      } else {
+        console.log("WORK IN PROGRESS");
+      }
     }
   })
 );
@@ -132,44 +126,10 @@ operateButton.addEventListener("click", () => {
   if (Boolean(num1) && Boolean(num2) && Boolean(operand)) {
     const result = operate(num1, num2, operand);
     updateDisplayContents(result);
-    // num1 = result;
-    // console.log(`num1 captured : ${num1}`);
     num1 = undefined;
     num2 = undefined;
   }
 });
-
-// loop?
-// while ....
-// === num1
-// operator detected
-// === num2
-// while
-//  if operand
-//    num2.
-//  else
-//    num1
-
-// todo
-// figure out how to determine and assign values for num1 and num2
-
-// create separate classes for display, numeric buttons, operands
-
-// logic??
-// while true
-// accepting input for num1.... if any operand is pressed end loop
-
-// start another loop
-// while true
-// accepting input for num2... if any operand is pressed, perform operation
-
-//
-// while acceptingInputForNum1 and not acceptingInputForNum2
-//
-//
-// while not acceptingInputForNum1 and acceptingInputForNum1
-//
-//
 
 // TODO
 // 1) if display.textContent is from operation
@@ -182,3 +142,4 @@ operateButton.addEventListener("click", () => {
 // for example, a user should still be able to see num1 after pressing
 // any operand. the display will only be cleared once the user starts
 // pressing any numeric button
+// 4) convert all of this into a Calculator Class
