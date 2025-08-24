@@ -52,6 +52,7 @@ function clear() {
 let num1;
 let num2;
 let toggleInputToNum2 = false;
+let displayFromOperation = false;
 let operand;
 const display = document.querySelector("div.display");
 const clearButton = document.querySelector("button.clearButton");
@@ -73,7 +74,12 @@ function clearDisplayContents() {
 const numericButtons = document.querySelectorAll("button.numeric");
 numericButtons.forEach((numericButton) =>
   numericButton.addEventListener("click", () => {
+    if (displayFromOperation) {
+      clearDisplayContents();
+      displayFromOperation = false;
+    }
     const displayContent = getDisplayContents();
+
     if (!stringHasDecimal(displayContent)) {
       updateDisplayContents(Number(displayContent + numericButton.textContent));
     } else {
@@ -84,6 +90,10 @@ numericButtons.forEach((numericButton) =>
 
 const decimalButton = document.querySelector("button.decimal");
 decimalButton.addEventListener("click", () => {
+  if (displayFromOperation) {
+    clearDisplayContents();
+    displayFromOperation = false;
+  }
   const displayContent = getDisplayContents() || "0";
   if (!stringHasDecimal(displayContent)) {
     updateDisplayContents(displayContent + decimalButton.textContent);
@@ -109,7 +119,7 @@ operandButtons.forEach((operandButton) =>
         num1 = result;
         num2 = undefined;
         operand = operandButton.textContent;
-        clearDisplayContents();
+        displayFromOperation = true;
         return;
       }
     } else {
@@ -130,14 +140,16 @@ operandButtons.forEach((operandButton) =>
 const operateButton = document.querySelector("button.operate");
 operateButton.addEventListener("click", () => {
   const displayContents = getDisplayContents();
-  if (Boolean(displayContents)) {
+  if (Boolean(displayContents) && !displayFromOperation) {
     num2 = Number(displayContents);
     toggleInputToNum2 = false;
 
     const result = operate(num1, num2, operand);
     updateDisplayContents(result);
+    displayFromOperation = true;
     num1 = undefined;
     num2 = undefined;
+    operand = undefined;
   }
 });
 
@@ -163,5 +175,5 @@ backspaceButton.addEventListener("click", () => {
 // any operand. the display will only be cleared once the user starts
 // pressing any numeric button
 // 4) convert all of this into a Calculator Class
-// 5) When a result is displayed, pressing a new digit should clear the result and start a new calculation instead of appending the digit to the existing result. Check whether this is the case on your calculator!
-// 6) Add keyboard support!
+// 5) Add keyboard support!
+// 6) unit tests?
