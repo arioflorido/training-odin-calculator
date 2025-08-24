@@ -11,7 +11,15 @@ function multiply(num1, num2) {
 }
 
 function divide(num1, num2) {
-  return num1 / num2;
+  try {
+    if (num2 == 0) {
+      throw "Err: Any number can't be divided by zero!";
+    }
+    return num1 / num2;
+  } catch (err) {
+    console.log(err);
+    return err;
+  }
 }
 
 function operate(num1, num2, operand) {
@@ -121,9 +129,11 @@ operandButtons.forEach((operandButton) =>
 
 const operateButton = document.querySelector("button.operate");
 operateButton.addEventListener("click", () => {
-  num2 = Number(getDisplayContents());
-  toggleInputToNum2 = false;
-  if (Boolean(num1) && Boolean(num2) && Boolean(operand)) {
+  const displayContents = getDisplayContents();
+  if (Boolean(displayContents)) {
+    num2 = Number(displayContents);
+    toggleInputToNum2 = false;
+
     const result = operate(num1, num2, operand);
     updateDisplayContents(result);
     num1 = undefined;
@@ -153,6 +163,5 @@ backspaceButton.addEventListener("click", () => {
 // any operand. the display will only be cleared once the user starts
 // pressing any numeric button
 // 4) convert all of this into a Calculator Class
-// 5) Display a snarky error message if the user tries to divide by 0… and don’t let it crash your calculator
-// 6) When a result is displayed, pressing a new digit should clear the result and start a new calculation instead of appending the digit to the existing result. Check whether this is the case on your calculator!
-// 7) Add keyboard support!
+// 5) When a result is displayed, pressing a new digit should clear the result and start a new calculation instead of appending the digit to the existing result. Check whether this is the case on your calculator!
+// 6) Add keyboard support!
