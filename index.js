@@ -41,7 +41,7 @@ class Calculator {
    * Perform an operation based on the operand.
    * @param {number} a
    * @param {number} b
-   * @param {string} operand - One of "+", "-", "x", "/"
+   * @param {string} operand - One of "+", "-", "*", "/"
    * @returns {number|string|undefined}
    */
   operate(a, b, operand) {
@@ -50,7 +50,7 @@ class Calculator {
         return this.add(a, b);
       case "-":
         return this.subtract(a, b);
-      case "x":
+      case "*":
         return this.multiply(a, b);
       case "/":
         return this.divide(a, b);
@@ -135,7 +135,7 @@ class Calculator {
     this.displayFromOperation = true;
   }
 
-  handleEquals() {
+  handleEqualsInput() {
     const currentValue = Number(this.getDisplay());
 
     if (!this.displayFromOperation && this.operand && this.num1 !== undefined) {
@@ -152,11 +152,20 @@ class Calculator {
     }
   }
 
-  handleBackspace() {
+  handleBackspaceInput() {
     const current = this.getDisplay();
     if (current) {
       this.updateDisplay(current.slice(0, -1));
     }
+  }
+
+  handleKeyboardInput(e) {
+    // console.log(e.keyCode);
+    // console.log(e);
+    const key = document.querySelector(`button[data-key="${e.keyCode}"]`);
+    const keys = JSON.parse(btn.dataset.keys);
+    console.log(key);
+    console.log(keys);
   }
 }
 
@@ -187,7 +196,7 @@ document
   .querySelector("button.decimal")
   .addEventListener("click", () => calculator.handleDecimalInput("."));
 
-// Operand buttons (+, -, x, /)
+// Operand buttons (+, -, *, /)
 document
   .querySelectorAll("button.operand")
   .forEach((btn) =>
@@ -199,12 +208,38 @@ document
 // Equals (=) button
 document
   .querySelector("button.operate")
-  .addEventListener("click", () => calculator.handleEquals());
+  .addEventListener("click", () => calculator.handleEqualsInput());
 
 // Backspace button
 document
   .querySelector("button.backspace")
-  .addEventListener("click", () => calculator.handleBackspace());
+  .addEventListener("click", () => calculator.handleBackspaceInput());
+
+// handle keydown: Enter
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Enter") {
+    calculator.handleEqualsInput();
+  }
+});
+
+// handle keydown: Backspace
+window.addEventListener("keydown", (e) => {
+  if (e.key === "Backspace") {
+    calculator.handleBackspaceInput();
+  }
+});
+
+// handle keydown: numeric and operator
+window.addEventListener("keydown", (e) => {
+  const buttons = document.querySelectorAll("button");
+
+  buttons.forEach((button) => {
+    if (button.textContent == e.key) {
+      button.click();
+      return;
+    }
+  });
+});
 
 // TODO
 // 1) if display.textContent is from operation
@@ -217,6 +252,5 @@ document
 // for example, a user should still be able to see num1 after pressing
 // any operand. the display will only be cleared once the user starts
 // pressing any numeric button
-// 4) convert all of this into a Calculator Class
-// 5) Add keyboard support!
-// 6) unit tests?
+// 4) fix bug when pressing num1 and operator multiple times.
+// 5) unit tests?
